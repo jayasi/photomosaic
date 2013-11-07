@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.Util;
 using Emgu.CV.Structure;
+using Emgu.CV.Util;
 using System.IO;
 
 
@@ -27,8 +28,8 @@ namespace WindowsFormsApplication4
 
         private void button1_Click(object sender, EventArgs e)
         {
-            int newheight = 100;    //Height and width to which we have to resize. We need to decide how we are finalizing these values.
-            int newwidth = 100;
+            int newheight = 50;    //Height and width to which we have to resize. We need to decide how we are finalizing these values.
+            int newwidth = 50;
             Bitmap bit, resized;    //bit is the original image and resized would be the resized one
             DialogResult result = folderBrowserDialog1.ShowDialog();    //Just like filedialog
             int count = 1;      //Counting number of images that are there in the folder
@@ -90,11 +91,29 @@ namespace WindowsFormsApplication4
                 grayvar = var.Convert<Gray, Byte>();
                 imageBox1.Image = grayvar;
                 imageBox1.Show();
-            }
+                Console.Out.Write("The height : " + grayvar.Height);
+                Image<Gray, Byte> Mosaic = new Image<Gray, Byte>(grayvar.Size);
+                Image<Gray, Byte> Mosaic2 = new Image<Gray, Byte>(50,50);
+               
+                //Processing each 20x20 grid and finding their brightness as well. 
+                for (int i = 0; i < (grayvar.Height); i +=50)
+                for(int j = 0; j<grayvar.Width;j+=50)
+                {
+                    Rectangle roi = grayvar.ROI;
+                    grayvar.ROI = new Rectangle(j, i, 50, 50);
+                    Bitmap smallbox = grayvar.ToBitmap();
+                    double brightnesshere = avgBrightness(smallbox);
+                    Console.Out.Write("Brightness: " + brightnesshere );
+                    grayvar.ROI = roi;
+                }
 
+                imageBox2.Image = Mosaic;
+                imageBox2.Show();
+
+            }
         }
 
-
+        //To find the avg brightness of the small images and the individual grids. 
         double avgBrightness(Bitmap x)
         {
             double result =0;
@@ -105,15 +124,16 @@ namespace WindowsFormsApplication4
             return result / (x.Height + x.Width);
         }
 
-      /*  private double avgIntensity(Image<Gray, Byte> var)
+        //NOT USING THIS. MADE IT PEHLE. NOW SHIFTED TO BITMAP. BUT JUST IN CASE :P
+        private double avgIntensity(Image<Gray, Byte> var)
         {
             double result=0;
             for(int i= 0; i<var.Width;i++)
                 for(int j=0; j<var.Height;j++)
-                    result += var[i,j].Intensity ;
+                    result += var[j,i].Intensity ;
             result = result/(var.Height + var.Width);
             return result; 
-        }*/
+        }
 
     }
 }
