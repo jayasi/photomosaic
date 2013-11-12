@@ -21,6 +21,7 @@ namespace WindowsFormsApplication4
         Image<Bgr, Byte> var;
         Image<Gray, Byte> grayvar;
         double[] brightness = new double[10000];
+        Color[] colors = new Color[10000];
         int total;
         string pathString;
 
@@ -56,20 +57,23 @@ namespace WindowsFormsApplication4
                         bit = new Bitmap(fileName, true);   //Open file
                         resized = new Bitmap(bit, newwidth, newheight); //Resize file
                         //Convert to grayscale.
-                        for (int i = 0; i < resized.Width; i++)
+                        /*for (int i = 0; i < resized.Width; i++)
                         {
                             for (int x = 0; x < resized.Height; x++)
                             {
                                 Color oc = resized.GetPixel(i, x);
+                                Color oc2 = resized.GetPixel(i, x); 
+                                //Console.Out.Write("Colour...." + oc.);
                                 int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
                                 Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
                                 resized.SetPixel(i, x, nc);
                             }
-                        }
+                        }*/
                         string name = pathString + "\\" + count + ".jpeg"; //Save file in the folder mosaic number wise 
                         resized.Save(name, System.Drawing.Imaging.ImageFormat.Jpeg);
                         brightness[count] = avgBrightness(resized); //Storing the average brightness corresponding to the image number in the folder. 
-                        Console.Out.Write(brightness[count] + "   ");
+                        colors[count] = getDominantColor(resized);
+                        Console.Out.Write(colors[count] + "   ");
                         count++;
                             progressBar1.Value += 1;
                     }
@@ -95,27 +99,29 @@ namespace WindowsFormsApplication4
                 String path = openFileDialog1.FileName;
                 var= new Image<Bgr, Byte>(path);
                 grayvar = var.Convert<Gray, Byte>();
-                imageBox1.Image = grayvar;
+                imageBox1.Image = var;
                 imageBox1.Show();
                 Console.Out.Write("The height : " + grayvar.Height);
-                Image<Gray, Byte> Mosaic = new Image<Gray, Byte>(grayvar.Size);
-                grayvar.CopyTo(Mosaic);
+                Image<Bgr, Byte> Mosaic = new Image<Bgr, Byte>(grayvar.Size);
+               // Image<Gray, Byte> Mosaic = new Image<Gray, Byte>(grayvar.Size);
+                var.CopyTo(Mosaic);
                 Image<Gray, Byte> Mosaic2 = new Image<Gray, Byte>(20,20);
                
                 //Processing each 20x20 grid and finding their brightness as well. 
                 for (int i = 0; i < (grayvar.Height - 10); i +=10)
                 for(int j = 0; j<grayvar.Width - 10;j+=10)
                 {
-                    Rectangle roi = grayvar.ROI;
-                    grayvar.ROI = new Rectangle(j, i, 10, 10);
-                    Bitmap smallbox = grayvar.ToBitmap();
+                    Rectangle roi = var.ROI;
+                    var.ROI = new Rectangle(j, i, 10, 10);
+                    Bitmap smallbox = var.ToBitmap();
                     double brightnesshere = avgBrightness(smallbox); //this is storing the avg brightness of the small grid 
-                    min = 1000;
+                    Color here = getDominantColor(smallbox);
+                    min = 100000;
                     
                     for (int k = 0; k < total-2; k++)
                     {
                         //Console.Out.Write("Difference is:" + Math.Abs(brightnesshere - brightness[k + 1]) + "at index" + k + " min: " + min);
-                        if (brightnesshere - brightness[k+1] <0 )
+                        /*if (brightnesshere - brightness[k+1] <0 )
                         {
                             if (brightness[k + 1] - brightnesshere < min)
                             {
@@ -128,16 +134,21 @@ namespace WindowsFormsApplication4
                             min = brightnesshere - brightness[k + 1];
                             index = k + 1;
 
+                        }*/
+                        if ((Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2)) < min)
+                        {
+                            min = Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2);
+                            index = k + 1;
                         }
-
                     }
 
                    Console.Out.Write("Index " + index + "....");
-                    grayvar.ROI = roi;
+                    var.ROI = roi;
                     //index = 9;
                     if (index == 220)
                         index = 219;
-                    Image<Gray, Byte> temp = new Image<Gray, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
+                    //Image<Gray, Byte> temp = new Image<Gray, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
+                    Image<Bgr, Byte> temp = new Image<Bgr, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
                     temp.CopyTo(Mosaic.GetSubRect(new Rectangle(j, i, 10, 10)));
                 }
                
@@ -157,6 +168,38 @@ namespace WindowsFormsApplication4
                    result += x.GetPixel(j, i).GetBrightness();
 
             return result / (x.Height + x.Width);
+        }
+
+        Color getDominantColor(Bitmap bmp)
+        {
+
+            //Used for tally
+            int r = 0;
+            int g = 0;
+            int b = 0;
+
+            int total = 0;
+
+            for (int x = 0; x < bmp.Width; x++)
+            {
+                for (int y = 0; y < bmp.Height; y++)
+                {
+                    Color clr = bmp.GetPixel(x, y);
+
+                    r += clr.R;
+                    g += clr.G;
+                    b += clr.B;
+
+                    total++;
+                }
+            }
+
+            //Calculate average
+            r /= total;
+            g /= total;
+            b /= total;
+
+            return Color.FromArgb(r, g, b);
         }
 
         //NOT USING THIS. MADE IT PEHLE. NOW SHIFTED TO BITMAP. BUT JUST IN CASE :P
