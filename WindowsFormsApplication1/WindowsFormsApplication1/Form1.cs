@@ -24,6 +24,7 @@ namespace WindowsFormsApplication4
         Color[] colors = new Color[10000];
         int total;
         string pathString;
+        int Isgray = 0;
 
         public Form1()
         {
@@ -57,25 +58,28 @@ namespace WindowsFormsApplication4
                         bit = new Bitmap(fileName, true);   //Open file
                         resized = new Bitmap(bit, newwidth, newheight); //Resize file
                         //Convert to grayscale.
-                        /*for (int i = 0; i < resized.Width; i++)
+                        if (Isgray == 1)
                         {
-                            for (int x = 0; x < resized.Height; x++)
+                            for (int i = 0; i < resized.Width; i++)
                             {
-                                Color oc = resized.GetPixel(i, x);
-                                Color oc2 = resized.GetPixel(i, x); 
-                                //Console.Out.Write("Colour...." + oc.);
-                                int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
-                                Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
-                                resized.SetPixel(i, x, nc);
+                                for (int x = 0; x < resized.Height; x++)
+                                {
+                                    Color oc = resized.GetPixel(i, x);
+                                    Color oc2 = resized.GetPixel(i, x); 
+                                    //Console.Out.Write("Colour...." + oc.);
+                                    int grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
+                                    Color nc = Color.FromArgb(oc.A, grayScale, grayScale, grayScale);
+                                    resized.SetPixel(i, x, nc);
+                                }
                             }
-                        }*/
+                        }
                         string name = pathString + "\\" + count + ".jpeg"; //Save file in the folder mosaic number wise 
                         resized.Save(name, System.Drawing.Imaging.ImageFormat.Jpeg);
                         brightness[count] = avgBrightness(resized); //Storing the average brightness corresponding to the image number in the folder. 
                         colors[count] = getDominantColor(resized);
-                        Console.Out.Write(colors[count] + "   ");
+                        //Console.Out.Write(colors[count] + "   ");
                         count++;
-                            progressBar1.Value += 1;
+                        progressBar1.Value += 1;
                     }
                 
                 }
@@ -83,14 +87,13 @@ namespace WindowsFormsApplication4
                 progressBar1.Visible = false;   //Make the progress bar invisible after completion. 
                 progressBar1.Dispose(); //Say bye bye to progress bar.
                 button2.Enabled = true; //Re enable the button to select main image. 
-               
 
            }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            int[] match;
+            
             double min;
             int index = 1; 
             DialogResult selectresult = openFileDialog1.ShowDialog(); // Show the dialog.
@@ -102,10 +105,20 @@ namespace WindowsFormsApplication4
                 imageBox1.Image = var;
                 imageBox1.Show();
                 Console.Out.Write("The height : " + grayvar.Height);
-                Image<Bgr, Byte> Mosaic = new Image<Bgr, Byte>(grayvar.Size);
-               // Image<Gray, Byte> Mosaic = new Image<Gray, Byte>(grayvar.Size);
-                var.CopyTo(Mosaic);
-                Image<Gray, Byte> Mosaic2 = new Image<Gray, Byte>(20,20);
+                Image<Bgr, Byte> Mosaic = new Image<Bgr, Byte>(grayvar.Size); ;
+                Image<Gray, Byte> GMosaic = new Image<Gray, Byte>(grayvar.Size); ;
+                if (Isgray == 0)
+                {
+                    Mosaic = new Image<Bgr, Byte>(grayvar.Size);
+                    var.CopyTo(Mosaic);
+                }
+                else
+                {
+                    GMosaic = new Image<Gray, Byte>(grayvar.Size);
+                    grayvar.CopyTo(GMosaic);
+                }
+               
+                //Image<Gray, Byte> Mosaic2 = new Image<Gray, Byte>(20,20);
                
                 //Processing each 20x20 grid and finding their brightness as well. 
                 for (int i = 0; i < (grayvar.Height - 10); i +=10)
@@ -121,40 +134,62 @@ namespace WindowsFormsApplication4
                     for (int k = 0; k < total-2; k++)
                     {
                         //Console.Out.Write("Difference is:" + Math.Abs(brightnesshere - brightness[k + 1]) + "at index" + k + " min: " + min);
-                        /*if (brightnesshere - brightness[k+1] <0 )
+                        if (Isgray == 1)
                         {
-                            if (brightness[k + 1] - brightnesshere < min)
+                            if (brightnesshere - brightness[k + 1] < 0)
                             {
-                                min = brightness[k + 1] - brightnesshere;
+                                if (brightness[k + 1] - brightnesshere < min)
+                                {
+                                    min = brightness[k + 1] - brightnesshere;
+                                    index = k + 1;
+                                }
+                            }
+                            else if (brightnesshere - brightness[k + 1] < min)
+                            {
+                                min = brightnesshere - brightness[k + 1];
                                 index = k + 1;
+
                             }
                         }
-                        else if (brightnesshere - brightness[k + 1] < min)
+                        else
                         {
-                            min = brightnesshere - brightness[k + 1];
-                            index = k + 1;
-
-                        }*/
-                        if ((Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2)) < min)
-                        {
-                            min = Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2);
-                            index = k + 1;
+                            if ((Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2)) < min)
+                            {
+                                min = Math.Pow((here.R - colors[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors[k + 1].B) * 0.11, 2);
+                                index = k + 1;
+                            }
                         }
                     }
 
                    Console.Out.Write("Index " + index + "....");
                     var.ROI = roi;
                     //index = 9;
-                    if (index == 220)
+                    if (index >=220)
                         index = 219;
                     //Image<Gray, Byte> temp = new Image<Gray, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
-                    Image<Bgr, Byte> temp = new Image<Bgr, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
-                    temp.CopyTo(Mosaic.GetSubRect(new Rectangle(j, i, 10, 10)));
+                    if (Isgray == 0)
+                    {
+                        Image<Bgr, Byte> temp = new Image<Bgr, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
+                        temp.CopyTo(Mosaic.GetSubRect(new Rectangle(j, i, 10, 10)));
+                    }
+                    else
+                    {
+                        Image<Gray, Byte> temp = new Image<Gray, Byte>(pathString + "\\" + index.ToString() + ".jpeg");
+                        temp.CopyTo(GMosaic.GetSubRect(new Rectangle(j, i, 10, 10)));
+
+                    }
                 }
-               
-               
-                imageBox2.Image = Mosaic;
-                imageBox2.Show();
+
+                if (Isgray == 0)
+                {
+                    imageBox2.Image = Mosaic;
+                    imageBox2.Show();
+                }
+                else
+                {
+                    imageBox2.Image = GMosaic;
+                    imageBox2.Show();
+                }
 
             }
         }
@@ -211,6 +246,21 @@ namespace WindowsFormsApplication4
                     result += var[j,i].Intensity ;
             result = result/(var.Height + var.Width);
             return result; 
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Isgray = 1;
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button4.Enabled = false;
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            button1.Enabled = true;
+            button2.Enabled = true;
+            button3.Enabled = false;
         }
 
     }
