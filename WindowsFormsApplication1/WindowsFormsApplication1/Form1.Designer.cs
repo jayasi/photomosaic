@@ -41,6 +41,9 @@
             this.imageBox3 = new Emgu.CV.UI.ImageBox();
             this.button5 = new System.Windows.Forms.Button();
             this.button6 = new System.Windows.Forms.Button();
+            this.button7 = new System.Windows.Forms.Button();
+            this.button8 = new System.Windows.Forms.Button();
+            this.button9 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imageBox3)).BeginInit();
@@ -49,7 +52,7 @@
             // button1
             // 
             this.button1.Enabled = false;
-            this.button1.Location = new System.Drawing.Point(513, 19);
+            this.button1.Location = new System.Drawing.Point(382, 20);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(105, 25);
             this.button1.TabIndex = 0;
@@ -64,7 +67,7 @@
             // button2
             // 
             this.button2.Enabled = false;
-            this.button2.Location = new System.Drawing.Point(370, 20);
+            this.button2.Location = new System.Drawing.Point(493, 21);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(126, 23);
             this.button2.TabIndex = 1;
@@ -83,15 +86,15 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Location = new System.Drawing.Point(385, 49);
+            this.progressBar1.Location = new System.Drawing.Point(240, 76);
             this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(100, 23);
+            this.progressBar1.Size = new System.Drawing.Size(193, 23);
             this.progressBar1.TabIndex = 3;
             this.progressBar1.Visible = false;
             // 
             // imageBox2
             // 
-            this.imageBox2.Location = new System.Drawing.Point(542, 76);
+            this.imageBox2.Location = new System.Drawing.Point(572, 85);
             this.imageBox2.Name = "imageBox2";
             this.imageBox2.Size = new System.Drawing.Size(75, 23);
             this.imageBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -120,7 +123,7 @@
             // 
             // imageBox3
             // 
-            this.imageBox3.Location = new System.Drawing.Point(542, 376);
+            this.imageBox3.Location = new System.Drawing.Point(572, 385);
             this.imageBox3.Name = "imageBox3";
             this.imageBox3.Size = new System.Drawing.Size(75, 23);
             this.imageBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -129,7 +132,8 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(663, 19);
+            this.button5.Enabled = false;
+            this.button5.Location = new System.Drawing.Point(625, 21);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 6;
@@ -147,11 +151,47 @@
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.button6_Click);
             // 
+            // button7
+            // 
+            this.button7.Enabled = false;
+            this.button7.Location = new System.Drawing.Point(421, 49);
+            this.button7.Name = "button7";
+            this.button7.Size = new System.Drawing.Size(75, 23);
+            this.button7.TabIndex = 8;
+            this.button7.Text = "10 x 10";
+            this.button7.UseVisualStyleBackColor = true;
+            this.button7.Click += new System.EventHandler(this.button7_Click);
+            // 
+            // button8
+            // 
+            this.button8.Enabled = false;
+            this.button8.Location = new System.Drawing.Point(502, 50);
+            this.button8.Name = "button8";
+            this.button8.Size = new System.Drawing.Size(75, 23);
+            this.button8.TabIndex = 9;
+            this.button8.Text = "5 x 5";
+            this.button8.UseVisualStyleBackColor = true;
+            this.button8.Click += new System.EventHandler(this.button8_Click);
+            // 
+            // button9
+            // 
+            this.button9.Enabled = false;
+            this.button9.Location = new System.Drawing.Point(583, 49);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 10;
+            this.button9.Text = "Mixed Sizes";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(830, 490);
+            this.ClientSize = new System.Drawing.Size(869, 490);
+            this.Controls.Add(this.button9);
+            this.Controls.Add(this.button8);
+            this.Controls.Add(this.button7);
             this.Controls.Add(this.button6);
             this.Controls.Add(this.button5);
             this.Controls.Add(this.imageBox3);
@@ -186,6 +226,9 @@
         private Emgu.CV.UI.ImageBox imageBox3;
         private System.Windows.Forms.Button button5;
         private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button button7;
+        private System.Windows.Forms.Button button8;
+        private System.Windows.Forms.Button button9;
     }
 }
 
