@@ -275,52 +275,24 @@ namespace WindowsFormsApplication4
 
         private void button5_Click(object sender, EventArgs e)
         {
+            if (Isgray == 0)
+            {
+                CvInvoke.cvSmooth(Mosaic, var, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
+                imageBox3.Image = var;
+                imageBox3.Show();
+            }
 
-            fvar = GMosaic.Convert<Gray, float>();
-            var1 = var.Convert<Gray, float>();
-         //   var1 = CvInvoke.
-            //var1 = new Image<Gray, float>(pathString);
-            midImage = CvInvoke.cvCreateImage(var.Size, Emgu.CV.CvEnum.IPL_DEPTH.IPL_DEPTH_32F, 2);
-           
-            dft = new Matrix<float>(var.Rows, var.Cols, 2);   //2D Matrix of 2 channels which will store the value of the fourier transform 
-            shift_real = new Matrix<float>(dft.Size);
-            real = new Matrix<float>(var.Size);//The matrix which shall contain the real part of the the fourier transform contained in dft
-            im = new Matrix<float>(var.Size);//The matrix which shall contain the imaginary part of the fourier transform contained in dft 
-            fft = new Matrix<float>(var.Rows, var.Cols, 2); //The matrix which will store the H(u,v), the filter 
-            final = new Matrix<float>(var.Rows, var.Cols, 2);
+            else
+            {
+                fvar = GMosaic.Convert<Gray, float>();
+                Image<Gray, float> fin = new Image<Gray, float>(GMosaic.Width, GMosaic.Height);
+                fin = GMosaic.Convert<Gray, float>();
 
-            CvInvoke.cvSetZero(midImage);  // Initialize all elements to Zero
-            CvInvoke.cvSetImageCOI(midImage, 1);    //Value 1 means that the first channel is selected! 
-            CvInvoke.cvCopy(fvar, midImage, IntPtr.Zero);    //Copying the value of the image selected to the first channel. 
-            CvInvoke.cvSetImageCOI(midImage, 0);    //Value 0 means that all channels are selected!
-
-            CvInvoke.cvDFT(midImage, dft, Emgu.CV.CvEnum.CV_DXT.CV_DXT_FORWARD, -1); //Performing fourier transform on the image and storing its result in dft. 
-
-            shift_real = new Matrix<float>(dft.Size);
-            final = new Matrix<float>(var.Rows, var.Cols, 2);
-            double dx = 80;
-            for (int i = 0; i < dft.Rows; i++)
-                for (int j = 0; j < dft.Cols; j++)
-                {
-                    double d = Math.Sqrt((i - (dft.Rows) / 2) * (i - (dft.Rows) / 2) + (j - (dft.Cols) / 2) * (j - (dft.Cols) / 2));
-                 //   double dx = double.Parse(textBox1.Text);
-                    double mid1 = 2 * dx * dx;
-                    double mid2 = -(d * d) / mid1;
-                    float h = (float)Math.Pow(2.71828, mid2);
-
-                    fft[i, j] = h;
-
-                }
-            Matrix<float> fft1 = new Matrix<float>(var.Rows, var.Cols, 2);
-            cvShiftDFT(fft, fft1);  //Fix the positioning. 
-            fft = fft1;
-
-            CvInvoke.cvMulSpectrums(dft, fft, final, Emgu.CV.CvEnum.MUL_SPECTRUMS_TYPE.DEFAULT);
-            CvInvoke.cvDFT(final, var1, Emgu.CV.CvEnum.CV_DXT.CV_DXT_INVERSE, -1);
-           
-           imageBox3.Image = var1;
-            imageBox3.Show();
-         
+                CvInvoke.cvSmooth(fvar, fin, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
+                imageBox3.Image = fin;
+                imageBox3.Show();
+            }
+            
        }
 
         private void button6_Click(object sender, EventArgs e)
