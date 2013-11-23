@@ -96,7 +96,7 @@
             // 
             this.imageBox2.Location = new System.Drawing.Point(572, 85);
             this.imageBox2.Name = "imageBox2";
-            this.imageBox2.Size = new System.Drawing.Size(75, 23);
+            this.imageBox2.Size = new System.Drawing.Size(285, 281);
             this.imageBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.imageBox2.TabIndex = 2;
             this.imageBox2.TabStop = false;
@@ -126,7 +126,6 @@
             this.imageBox3.Location = new System.Drawing.Point(572, 385);
             this.imageBox3.Name = "imageBox3";
             this.imageBox3.Size = new System.Drawing.Size(75, 23);
-            this.imageBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.imageBox3.TabIndex = 2;
             this.imageBox3.TabStop = false;
             // 
