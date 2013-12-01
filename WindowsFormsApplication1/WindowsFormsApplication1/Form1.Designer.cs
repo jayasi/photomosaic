@@ -126,6 +126,7 @@
             this.imageBox3.Location = new System.Drawing.Point(572, 385);
             this.imageBox3.Name = "imageBox3";
             this.imageBox3.Size = new System.Drawing.Size(75, 23);
+            this.imageBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.imageBox3.TabIndex = 2;
             this.imageBox3.TabStop = false;
             // 
