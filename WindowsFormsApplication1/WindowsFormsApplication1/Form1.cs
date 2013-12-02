@@ -13,6 +13,8 @@ using Emgu.CV.Structure;
 using Emgu.CV.Util;
 using System.IO;
 
+//internal System.Windows.Forms.ComboBox ComboBox1;
+
 
 namespace WindowsFormsApplication4
 {
@@ -43,6 +45,8 @@ namespace WindowsFormsApplication4
         public Form1()
         {
             InitializeComponent();
+            //button1.Enabled = true;
+            //button2.Enabled = true;
         }
 
         //Selection of folders. 
@@ -68,6 +72,7 @@ namespace WindowsFormsApplication4
                 System.IO.Directory.CreateDirectory(pathString5);
                 progressBar1.Visible = true;
                 progressBar1.Value = 0;
+                //test
                 button1.Enabled = false; //Disable buttons while the images are getting chota. 
                 button2.Enabled = false;
                // total;
@@ -232,19 +237,19 @@ namespace WindowsFormsApplication4
         }
 
         private void button3_Click(object sender, EventArgs e)
-        {
+        {/*
             Isgray = 1;
             button1.Enabled = true;
            // button2.Enabled = true;
-            button4.Enabled = false;
+            button4.Enabled = true;*/
         }
 
         private void button4_Click(object sender, EventArgs e)
-        {
+        {/*
             button1.Enabled = true;
             //button2.Enabled = true;
             button3.Enabled = false;
-        }
+        */}
 
         private void button5_Click(object sender, EventArgs e)
         {
@@ -271,11 +276,11 @@ namespace WindowsFormsApplication4
         private void button6_Click(object sender, EventArgs e)
         {
 
-            single = 1;
+          /*  single = 1;
             //button1.Enabled = true;
             button2.Enabled = true;
             button6.Enabled = false;
-
+            */
         }
 
         private void button7_Click(object sender, EventArgs e)
@@ -322,11 +327,12 @@ namespace WindowsFormsApplication4
          
                 imageBox1.Image = var;
                 imageBox1.Show();
+                //
+                progressBar2.Maximum = (grayvar.Height * grayvar.Width) / (size * size);
 
-                progressBar1.Maximum = (grayvar.Height * grayvar.Width) / (size * size);
-
-                progressBar1.Value = 0;
-                progressBar1.Visible = true;
+                progressBar2.Visible = true;
+                progressBar2.Value = 0;
+                //progressBar1.Visible = true;
                 Mosaic = new Image<Bgr, Byte>(var.Size); 
                 GMosaic = new Image<Gray, Byte>(grayvar.Size);
             
@@ -346,7 +352,7 @@ namespace WindowsFormsApplication4
                     Image<Bgr, Byte> tochange = new Image<Bgr, Byte>(path);
                     Bitmap bit = new Bitmap(path, true);   //Open file
                     Bitmap resized = new Bitmap(bit, size, size); //Resize file
-                
+                //HEREEE!
                     imageBox1.Image = tochange;
                     tochange = new Image<Bgr,Byte>(resized);
 
@@ -357,7 +363,7 @@ namespace WindowsFormsApplication4
                     for (int i = 0; i < (grayvar.Height ); i += size)
                         for (int j = 0; j < grayvar.Width; j += size)
                         {
-                            progressBar1.Value++;
+                            progressBar2.Value++;
 
                             float amin=1;
                             float max=1;
@@ -409,7 +415,7 @@ namespace WindowsFormsApplication4
             //Single nonmixed done.
                 else
                 {
-                    progressBar1.Value = 0;
+                    progressBar2.Value = 0;
                     double min = 10000;
                     int index = 10000;
 
@@ -425,15 +431,13 @@ namespace WindowsFormsApplication4
                             double sDev = standardDeviation(brightnesshere, smallbox);
                             Color here = getDominantColor(smallbox);
                             min = 100000;
-                            progressBar1.Value++;
+                            progressBar2.Value++;
 
 
                             for (int k = 0; k < total - 2; k++)
                             {
                                 if (Isgray == 1)
                                 {
-
-
                                     if (brightnesshere - brightness10[k + 1] < 0)
                                     {
                                         if (brightness10[k + 1] - brightnesshere < min)
@@ -458,10 +462,6 @@ namespace WindowsFormsApplication4
                                     }
                                 }
                             }
-
-
-                            // Console.Out.Write("Standard Deviation" + sDev + "....");
-                        // progressBar1.Value++;
                          Bitmap heresmallbox = var.ToBitmap();
                         Image<Bgr, float> ismallbox = new Image<Bgr, float>(heresmallbox);
                         var.ROI = roi;
@@ -469,7 +469,6 @@ namespace WindowsFormsApplication4
                         if (Isgray == 0)
                         {
                             float amin = 1;
-                          //  string n = "pathString" + size;
                             Image<Bgr,Byte> temp;
 
                             if(size == 10)
@@ -478,10 +477,7 @@ namespace WindowsFormsApplication4
                             temp = new Image<Bgr, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
                             
                             Image<Bgr, Byte> tochange = temp;
-                            //  Bitmap heresmallbox = var.ToBitmap();
-                            //Image<Bgr, float> ismallbox = new Image<Bgr, float>(heresmallbox);
-
-
+       
                             Image<Gray, Byte>[] channels = tochange.Split();
 
                             channels = tochange.Split();
@@ -512,21 +508,51 @@ namespace WindowsFormsApplication4
                         }
                         else
                         {
+
+                            float amin = 1;
                             Image<Gray, Byte> temp;
+
                             if (size == 10)
                                 temp = new Image<Gray, Byte>(pathString10 + "\\" + index.ToString() + ".jpeg");
                             else
                                 temp = new Image<Gray, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
-                            
+
+                            Image<Gray, Byte> tochange = temp;
+
+                            Image<Gray, Byte>[] channels = tochange.Split();
+
+                            channels = tochange.Split();
+
+                            for (int k = 0; k < channels.Length; k++)
+                            {
+                                int max = 0;
+                                amin = 300;
+                                for (int a = 0; a < ismallbox.Height; a++)
+                                {
+                                    for (int b = 0; b < ismallbox.Width; b++)
+                                    {
+                                        if ((int)ismallbox.Data[a, b, k] > max)
+                                        {
+                                            max = (int)ismallbox.Data[a, b, k];
+                                        }
+                                        if ((int)ismallbox.Data[a, b, k] < amin)
+                                        {
+                                            amin = (int)ismallbox.Data[a, b, k];
+                                        }
+                                    }
+                                }
+                                CvInvoke.cvNormalize(channels[k], channels[k], amin, max, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
+
+                            }
+                            temp = new Image<Gray, byte>(channels);
                             temp.CopyTo(GMosaic.GetSubRect(new Rectangle(j, i, size, size)));
 
                         }
 
                     }
             }
-                progressBar1.Value = 0;
-                progressBar1.Visible = false;
-                ///progressBar1.Dispose();
+                progressBar2.Value = 0;
+                progressBar2.Visible = false;
                 if (Isgray == 0)
                 {
                     imageBox2.Image = Mosaic;
@@ -555,12 +581,12 @@ namespace WindowsFormsApplication4
             grayvar = new Image<Gray, Byte>(re.Width, re.Height);
             grayvar = new Image<Gray, Byte>(re);
 
-            progressBar1.Maximum = (grayvar.Height * grayvar.Width) / (size * size);
+            progressBar2.Maximum = (grayvar.Height * grayvar.Width) / (size * size);
 
             Mosaic = new Image<Bgr, Byte>(grayvar.Size); ;
             GMosaic = new Image<Gray, Byte>(grayvar.Size);
-            progressBar1.Value = 0;
-            progressBar1.Visible = true;
+            progressBar2.Value = 0;
+            progressBar2.Visible = true;
             
             if (Isgray == 0)
             {
@@ -588,7 +614,7 @@ namespace WindowsFormsApplication4
                 for (int i = 0; i < (grayvar.Height); i += size)
                     for (int j = 0; j < grayvar.Width; j += size)
                     {
-                        progressBar1.Value++;
+                        progressBar2.Value++;
 
                         float amin;
                         float max;
@@ -619,12 +645,14 @@ namespace WindowsFormsApplication4
                         bit = tochange.Bitmap;
                         resized = new Bitmap(bit, size, size); //Resize file
 
-                        IntPtr final = CvInvoke.cvCreateImage(resized.Size, Emgu.CV.CvEnum.IPL_DEPTH.IPL_DEPTH_32F, 2);
+                        /*IntPtr final = CvInvoke.cvCreateImage(resized.Size, Emgu.CV.CvEnum.IPL_DEPTH.IPL_DEPTH_32F, 2);
                         Image<Gray, float> atochange = new Image<Gray, float>(resized);
                         CvInvoke.cvSetZero(final);  // In6itialize all elements to Zero
                         CvInvoke.cvSetImageCOI(final, 1);    //Value 1 means that the first channel is selected! 
                         CvInvoke.cvCopy(atochange, final, IntPtr.Zero);    //Copying the value of the image selected to the first channel. 
                         CvInvoke.cvSetImageCOI(final, 0);    //Value 0 means that all channels are selected!
+                        */
+                        Image<Gray, float> atochange = new Image<Gray, float>(resized);
                         CvInvoke.cvNormalize(atochange, atochange, amin, max, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
 
 
@@ -666,40 +694,60 @@ namespace WindowsFormsApplication4
                                     double sbright = avgBrightness(smallersmallbox);
                                     min = 100000;
                                     for (int m = 0; m < total - 2; m++)
-
-                                        if (Isgray == 1)
+                                    {
+                                        if (sbright - brightness5[m + 1] < 0)
                                         {
-
-                                            if (sbright - brightness5[m + 1] < 0)
+                                            if (brightness5[m + 1] - sbright < min)
                                             {
-                                                if (brightness5[m + 1] - sbright < min)
-                                                {
-                                                    min = brightness5[m + 1] - sbright;
-                                                    index = m + 1;
-                                                }
-                                            }
-                                            else if (sbright - brightness5[m + 1] < min)
-                                            {
-                                                min = sbright - brightness5[m + 1];
+                                                min = brightness5[m + 1] - sbright;
                                                 index = m + 1;
-
                                             }
                                         }
-         
+                                        else if (sbright - brightness5[m + 1] < min)
+                                        {
+                                            min = sbright - brightness5[m + 1];
+                                            index = m + 1;
+
+                                        }
+                                    }
+                                    Image<Bgr,Byte> tochange = new Image<Bgr, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
+                                    Image<Bgr, Byte> ismallbox = new Image<Bgr, Byte>(var.ToBitmap());
+                                    Image<Gray, Byte>[] channels = tochange.Split();
+
+                                    channels = tochange.Split();
+
+                                    for (int kk = 0; kk < channels.Length; kk++)
+                                    {
+                                        int max = 0;
+                                        int amin = 300;
+                                        for (int a = 0; a < ismallbox.Height; a++)
+                                        {
+                                            for (int b = 0; b < ismallbox.Width; b++)
+                                            {
+                                                if ((int)ismallbox.Data[a, b, kk] > max)
+                                                {
+                                                    max = (int)ismallbox.Data[a, b, kk];
+                                                }
+                                                if ((int)ismallbox.Data[a, b, kk] < amin)
+                                                {
+                                                    amin = (int)ismallbox.Data[a, b, kk];
+                                                }
+                                            }
+                                        }
+                                        CvInvoke.cvNormalize(channels[kk], channels[kk], amin, max, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
+
+                                    }
+                                   
+                                    Image<Bgr, Byte> temp = new Image<Bgr, byte>(channels);
                                     var.ROI = roi;
                                     if (Isgray == 0)
                                     {
-                                        Image<Bgr, Byte> temp;
-                                        temp = new Image<Bgr, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
-                           
                                         temp.CopyTo(Mosaic.GetSubRect(new Rectangle(l, k, size / 2, size / 2)));
                                     }
                                     else
                                     {
-                                        Image<Gray, Byte> temp;
-                                            temp = new Image<Gray, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
-                           
-                                        temp.CopyTo(GMosaic.GetSubRect(new Rectangle(l, k, size / 2, size / 2)));
+                                        Image<Gray, Byte> tempg = temp.Convert<Gray, Byte>();
+                                        tempg.CopyTo(GMosaic.GetSubRect(new Rectangle(l, k, size / 2, size / 2)));
                                     }
 
                                 }
@@ -739,37 +787,55 @@ namespace WindowsFormsApplication4
                                 }
                             }
 
-                             progressBar1.Value++;
+                             progressBar2.Value++;
+                             Image<Bgr, Byte> tochange = new Image<Bgr, Byte>(pathString10 + "\\" + index.ToString() + ".jpeg");
+                             Image<Bgr, Byte> ismallbox = new Image<Bgr, Byte>(var.ToBitmap());
+                             Image<Gray, Byte>[] channels = tochange.Split();
+
+                             channels = tochange.Split();
+
+                             for (int kk = 0; kk < channels.Length; kk++)
+                             {
+                                 int max = 0;
+                                 int amin = 300;
+                                 for (int a = 0; a < ismallbox.Height; a++)
+                                 {
+                                     for (int b = 0; b < ismallbox.Width; b++)
+                                     {
+                                         if ((int)ismallbox.Data[a, b, kk] > max)
+                                         {
+                                             max = (int)ismallbox.Data[a, b, kk];
+                                         }
+                                         if ((int)ismallbox.Data[a, b, kk] < amin)
+                                         {
+                                             amin = (int)ismallbox.Data[a, b, kk];
+                                         }
+                                     }
+                                 }
+                                 CvInvoke.cvNormalize(channels[kk], channels[kk], amin, max, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
+
+                             }
+                             Image<Bgr, Byte> temp = new Image<Bgr, byte>(channels);
+                              
 
                             var.ROI = roi;
          
                             if (Isgray == 0)
                             {
-                                Image<Bgr, Byte> temp;
-                                if (size == 10)
-                                    temp = new Image<Bgr, Byte>(pathString10 + "\\" + index.ToString() + ".jpeg");
-                                else
-                                    temp = new Image<Bgr, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
-                           
                                 temp.CopyTo(Mosaic.GetSubRect(new Rectangle(j, i, size, size)));
                             }
                             else
                             {
-                                Image<Gray, Byte> temp;
-                                if (size == 10)
-                                    temp = new Image<Gray, Byte>(pathString10 + "\\" + index.ToString() + ".jpeg");
-                                else
-                                    temp = new Image<Gray, Byte>(pathString5 + "\\" + index.ToString() + ".jpeg");
-                           
-                                temp.CopyTo(GMosaic.GetSubRect(new Rectangle(j, i, size, size)));
+                                Image<Gray, Byte> tempg = temp.Convert<Gray, Byte>();
+                                tempg.CopyTo(GMosaic.GetSubRect(new Rectangle(j, i, size, size)));
 
                             }
                         }
 
                      
                     }
-                progressBar1.Value = 0;
-                progressBar1.Visible = false;
+                progressBar2.Value = 0;
+                progressBar2.Visible = false;
                 ///progressBar1.Dispose();
                 if (Isgray == 0)
                 {
@@ -800,6 +866,47 @@ namespace WindowsFormsApplication4
         {
 
         }
-        }
-    }
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            if (comboBox1.SelectedItem == "Gray")
+            {
+                Isgray = 1;
+                button1.Enabled = true;
+                radioButton3.Enabled = true;
+            }
+            else if (comboBox1.SelectedItem == "Color")
+            {
+                Isgray = 0;
+                button1.Enabled = true;
+                radioButton3.Enabled = true;
+            }
+            else if (comboBox1.SelectedItem == "Single")
+            {
+                single = 1;
+                button2.Enabled = true;
+                radioButton3.Enabled = false;
+            }
+
+        }
+        
+        
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+        }
+    
+
+}
+
+	// This method initializes the combo box, adding a large string array 
+	// but limiting the drop-down size to six rows so the combo box doesn't  
+	// cover other controls when it expands. 
