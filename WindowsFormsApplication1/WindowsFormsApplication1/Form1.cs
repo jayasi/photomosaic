@@ -352,7 +352,7 @@ namespace WindowsFormsApplication4
                     Image<Bgr, Byte> tochange = new Image<Bgr, Byte>(path);
                     Bitmap bit = new Bitmap(path, true);   //Open file
                     Bitmap resized = new Bitmap(bit, size, size); //Resize file
-                //HEREEE!
+        
                     imageBox1.Image = tochange;
                     tochange = new Image<Bgr,Byte>(resized);
 
@@ -557,13 +557,13 @@ namespace WindowsFormsApplication4
                 {
                     imageBox2.Image = Mosaic;
                     imageBox2.Show();
-                    CvInvoke.cvShowImage("Hi", Mosaic);
+                   // CvInvoke.cvShowImage("Hi", Mosaic);
                 }
                 else
                 {
                     imageBox2.Image = GMosaic;
                     imageBox2.Show();
-                    CvInvoke.cvShowImage("Hi", GMosaic);
+                   // CvInvoke.cvShowImage("Hi", GMosaic);
                 }
             }
         
@@ -580,6 +580,10 @@ namespace WindowsFormsApplication4
             var = new Image<Bgr, Byte>(re);
             grayvar = new Image<Gray, Byte>(re.Width, re.Height);
             grayvar = new Image<Gray, Byte>(re);
+
+            imageBox1.Image = var;
+            imageBox1.Show();
+            
 
             progressBar2.Maximum = (grayvar.Height * grayvar.Width) / (size * size);
 
@@ -841,11 +845,13 @@ namespace WindowsFormsApplication4
                 {
                     imageBox2.Image = Mosaic;
                     imageBox2.Show();
+                    //Mosaic.Save(path\\"mosaic.jpg");
                 }
                 else
                 {
                     imageBox2.Image = GMosaic;
                     imageBox2.Show();
+                   // result.Save("F:\\add.jpg")
                 }
             }
         }
