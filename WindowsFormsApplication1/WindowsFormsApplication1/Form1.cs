@@ -52,14 +52,15 @@ namespace WindowsFormsApplication4
         //Selection of folders. 
         private void button1_Click(object sender, EventArgs e)
         {
-            int newheight = size;    //Height and width to which we have to resize. We need to decide how we are finalizing these values.
-            int newwidth = size;
+            int newheight = 10;    //Height and width to which we have to resize. We need to decide how we are finalizing these values.
+            int newwidth = 10;
             Bitmap bit, resized10;    //bit is the original image and resized would be the resized one
             Bitmap resized5;    //bit is the original image and resized would be the resized one
             DialogResult result = folderBrowserDialog1.ShowDialog();    //Just like filedialog
             int count = 1;      //Counting number of images that are there in the folder
             List<string> ImageExtensions = new List<string> { ".JPG", ".JPE", ".BMP", ".GIF", ".PNG",".TIF" }; //List to check whether the file is an image or not
-
+            ftotal = 0;
+            total = 0;
             if (result == DialogResult.OK)
             {
                 string[] files = Directory.GetFiles(folderBrowserDialog1.SelectedPath);     //Stores the names of files in the selected folder
@@ -134,8 +135,7 @@ namespace WindowsFormsApplication4
 
                 
                 }
-                total = total + 2;
-            //    progressBar1.Dispose(); //Say bye bye to progress bar.
+                total = total + 1;
                 button2.Enabled = true; //Re enable the button to select main image. 
                 progressBar1.Visible = false;   //Make the progress bar invisible after completion. 
 
@@ -154,19 +154,6 @@ namespace WindowsFormsApplication4
                 path = openFileDialog1.FileName;
                 var = new Image<Bgr, Byte>(path);
                 grayvar = new Image<Gray, Byte>(path);
-          
-                // grayvar = var.Convert<Gray, Byte>();
-               /* if (Isgray == 0)
-                    imageBox1.Image = var;
-                if (Isgray == 1 || single == 1)
-                    imageBox1.Image = grayvar; */
-              //  progressBar1.Maximum = (grayvar.Width * grayvar.Height) / 100;
-
-            //    imageBox1.Show();
-                //Console.Out.Write("The height : " + grayvar.Height);
-                //button9.Enabled = true;
-                //button8.Enabled = true;
-                //button7.Enabled = true;
                 button5.Enabled = true;
                 
             }
@@ -456,7 +443,7 @@ namespace WindowsFormsApplication4
                                 }
                                 else
                                 {
-                                    if ((Math.Pow((here.R - colors5[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors5[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors5[k + 1].B) * 0.11, 2)) < min)
+                                    if ((Math.Pow((here.R - colors10[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors10[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors10[k + 1].B) * 0.11, 2)) < min)
                                     {
                                         min = Math.Pow((here.R - colors10[k + 1].R) * 0.3, 2) + Math.Pow((here.G - colors10[k + 1].G) * 0.59, 2) + Math.Pow((here.B - colors10[k + 1].B) * 0.11, 2);
                                         index = k + 1;
