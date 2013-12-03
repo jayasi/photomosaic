@@ -22,7 +22,7 @@ namespace WindowsFormsApplication4
     {
         Image<Bgr, Byte> var;
         Image<Gray, Byte> grayvar;
-
+        Image<Gray, float> fin;
         Image<Gray, float> fvar;
         Image<Gray, float> var1;
         Image<Bgr, Byte> Mosaic; 
@@ -263,7 +263,7 @@ namespace WindowsFormsApplication4
             else
             {
                 fvar = GMosaic.Convert<Gray, float>();
-                Image<Gray, float> fin = new Image<Gray, float>(GMosaic.Width, GMosaic.Height);
+                fin = new Image<Gray, float>(GMosaic.Width, GMosaic.Height);
                 fin = GMosaic.Convert<Gray, float>();
 
                 CvInvoke.cvSmooth(fvar, fin, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
@@ -410,7 +410,7 @@ namespace WindowsFormsApplication4
          
                    imageBox2.Image = Mosaic;
                     imageBox2.Show();
-
+                    
                 }
             //Single nonmixed done.
                 else
@@ -845,13 +845,13 @@ namespace WindowsFormsApplication4
                 {
                     imageBox2.Image = Mosaic;
                     imageBox2.Show();
-                    //Mosaic.Save(path\\"mosaic.jpg");
+                   // Mosaic.Save(path);
                 }
                 else
                 {
                     imageBox2.Image = GMosaic;
                     imageBox2.Show();
-                   // result.Save("F:\\add.jpg")
+                   
                 }
             }
         }
@@ -905,6 +905,43 @@ namespace WindowsFormsApplication4
         }
 
         private void groupBox1_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+
+           if (Isgray==0)
+           {
+               Mosaic.Save("Mosaic.jpg");
+           }
+           else if (Isgray==1)
+           {
+               GMosaic.Save("Mosaic.jpg");
+           }
+
+            //var//fin
+        }
+
+        private void button4_Click_1(object sender, EventArgs e)
+        {
+            if (Isgray == 0)
+            {
+                var.Save("Blurred.jpg");
+            }
+            else if (Isgray == 1)
+            {
+                fin.Save("Blurred.jpg");
+            }
+        }
+
+        private void imageBox2_Click(object sender, EventArgs e)
         {
 
         }
