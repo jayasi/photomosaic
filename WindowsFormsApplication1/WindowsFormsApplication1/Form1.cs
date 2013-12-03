@@ -253,6 +253,7 @@ namespace WindowsFormsApplication4
 
         private void button5_Click(object sender, EventArgs e)
         {
+            button4.Enabled = true;
             if (Isgray == 0)
             {
                 CvInvoke.cvSmooth(Mosaic, var, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
