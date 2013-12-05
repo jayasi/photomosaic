@@ -244,6 +244,7 @@ namespace WindowsFormsApplication4
             if (Isgray == 0)
             {
                 CvInvoke.cvSmooth(Mosaic, var, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
+                CvInvoke.cvNormalize(var, var, 0, 255, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
                 imageBox3.Image = var;
                 imageBox3.Show();
             }
@@ -255,6 +256,8 @@ namespace WindowsFormsApplication4
                 fin = GMosaic.Convert<Gray, float>();
 
                 CvInvoke.cvSmooth(fvar, fin, Emgu.CV.CvEnum.SMOOTH_TYPE.CV_GAUSSIAN, 9, 9, 9, 9);
+                CvInvoke.cvNormalize(fin, fin, 0, 255, Emgu.CV.CvEnum.NORM_TYPE.CV_MINMAX, IntPtr.Zero);
+
                 imageBox3.Image = fin;
                 imageBox3.Show();
             }
